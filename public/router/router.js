@@ -27,6 +27,7 @@ class RouterRouteChangeEvent {
     /** @type {String} */ path;
     /** @type {ParamObject} */ params = {};
     /** @type {QueryObject} */ query;
+    /** @type {HTMLElement?} */ #element = null;
 
     /**
      * @param {"routechange"} eventType
@@ -45,15 +46,73 @@ class RouterRouteChangeEvent {
     }
 
 
+
+    /**
+     * 
+     * @param {String} str 
+     */
+    #matchRoute(str) {
+        const path = window.location.pathname;
+        if (str === path) {
+            return true;
+        } else {
+            /** @type {Array<String>} */
+            const keys = str.split("/").filter(x => x != "").map(x => x.replace("/", ""));
+
+            /** @type {Array<String>} */
+            const values = path.split("/").filter(x => x != "").map(x => x.replace("/", ""))
+
+
+            if (keys.length === values.length) {
+                let returnType = true;
+                for (let i = 0; i < keys.length; i++) {
+                    if (keys[i].startsWith(":")) {
+                        continue;
+                    } else if (keys[i] !== values[i]) {
+                        returnType = false;
+                        break;
+                    }
+                }
+
+                return returnType;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    /**
+     * Renders the linked element only 
+     */
+    render() {
+        router.hideRouteElements(this.#element);
+    }
+
     /**
      * 
      * @param {String} str 
      */
     matches(str) {
+
         Router.matchCount += 1;
 
         const path = window.location.pathname;
         if (str === path) {
+            const routes = document.querySelectorAll("[data-route]");
+            let noMatch = true;
+            routes.forEach(route => {
+                const registeredRoute = route.getAttribute("data-route");
+                if (this.#matchRoute(registeredRoute)) {
+                    this.#element = route;
+                    noMatch = false;
+                }
+            })
+
+            if (noMatch) {
+                const noMatchRoute = document.querySelector("[data-route='*']");
+                this.#element = noMatchRoute;
+            }
+
             return true;
         } else {
             /** @type {Array<String>} */
@@ -75,7 +134,23 @@ class RouterRouteChangeEvent {
                         break;
                     }
                 }
+
                 if (returnType) {
+                    const routes = document.querySelectorAll("[data-route]");
+                    let noMatch = true;
+                    routes.forEach(route => {
+                        const registeredRoute = route.getAttribute("data-route");
+                        if (this.#matchRoute(registeredRoute)) {
+                            this.#element = route;
+                            noMatch = false;
+                        }
+                    })
+
+                    if (noMatch) {
+                        const noMatchRoute = document.querySelector("[data-route='*']");
+                        this.#element = noMatchRoute;
+                    }
+
                     this.params = obj;
                 }
 
@@ -85,6 +160,10 @@ class RouterRouteChangeEvent {
             }
         }
 
+    }
+
+    get linkedElement() {
+        return this.#element;
     }
 
     /** */
@@ -224,40 +303,6 @@ class Router {
     }
 
 
-    /**
-     * 
-     * @param {String} str 
-     */
-    #matchRoute(str) {
-        const path = window.location.pathname;
-        if (str === path) {
-            return true;
-        } else {
-            /** @type {Array<String>} */
-            const keys = str.split("/").filter(x => x != "").map(x => x.replace("/", ""));
-
-            /** @type {Array<String>} */
-            const values = path.split("/").filter(x => x != "").map(x => x.replace("/", ""))
-
-
-            if (keys.length === values.length) {
-                const obj = {};
-                let returnType = true;
-                for (let i = 0; i < keys.length; i++) {
-                    if (keys[i].startsWith(":")) {
-                        continue;
-                    } else if (keys[i] !== values[i]) {
-                        returnType = false;
-                        break;
-                    }
-                }
-
-                return returnType;
-            } else {
-                return false;
-            }
-        }
-    }
 
 
     /**
@@ -331,31 +376,18 @@ class Router {
     emit(eventType, forwardObject = {}) {
         switch (eventType) {
             case RouterEvent.routeChange:
-                let noMatch = true;
-
-                this.#routes.forEach(route => {
-                    const routeStr = route.getAttribute("data-route")
-
-                    if (this.#matchRoute(routeStr)) {
-                        route.removeAttribute("hidden");
-                        noMatch = false;
-                    } else {
-                        route.setAttribute("hidden", "");
-                    }
-                });
-
-                if (noMatch) {
-                    this.#routes.find((x) => {
-                        const routeStr = x.getAttribute("data-route");
-                        if (routeStr === "*") {
-                            x.removeAttribute("hidden");
-                        }
-                    })
-                }
-
                 this.#eventManager.callRouteChangeEvents(forwardObject);
                 break;
         }
+    }
+
+    /**
+     * 
+     * @param {HTMLElement} except 
+     */
+    hideRouteElements(except) {
+        this.#routes.forEach(d => d.hidden = true);
+        except?.hidden = false;
     }
 
     /**

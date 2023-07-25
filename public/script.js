@@ -2,18 +2,17 @@ import { router } from "./router/router.js"
 
 router.on("routechange", async (e) => {
     if (e.matches("/")) {
-        e.doProgress();
-
-        console.log("home")
+        e.render();
     } else if (e.matches("/app")) {
         try {
             await e.fetch("https://google.com", {
                 mode: "no-cors"
             });
+            e.render();
         } catch (err) {
 
         }
-        console.log("app")
+        router.hideRouteElements(e.linkedElement);
     } else {
         console.log("404")
     }
