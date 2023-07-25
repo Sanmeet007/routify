@@ -30,7 +30,7 @@ class RouterRouteChangeEvent {
     /** @type {HTMLElement?} */ #element = null;
 
     /**
-     * @param {"routechange"} eventType
+     * @param {ObjectConstructor} obj
      */
     constructor(obj = {}) {
         this.path = window.location.pathname;
@@ -48,8 +48,9 @@ class RouterRouteChangeEvent {
 
 
     /**
-     * 
+     * Matches route but doesn't forms any additional objects
      * @param {String} str 
+     * @returns {boolean}
      */
     #matchRoute(str) {
         const path = window.location.pathname;
@@ -82,15 +83,16 @@ class RouterRouteChangeEvent {
     }
 
     /**
-     * Renders the linked element only 
+     * Renders the linked element only and hides all other 
      */
     render() {
         router.hideRouteElements(this.#element);
     }
 
     /**
-     * 
+     * Matches the current url with route specified by the user
      * @param {String} str 
+     * @returns {boolean}
      */
     matches(str) {
 
@@ -162,11 +164,19 @@ class RouterRouteChangeEvent {
 
     }
 
+    /**
+     * Returns the element whose route matches with the current url.
+     * Note : Only works after match is called 
+     * 
+     * @returns {HTMLElement?}
+     */
     get linkedElement() {
         return this.#element;
     }
 
-    /** */
+    /** 
+     * Does a dummy progress loading
+    */
     doProgress() {
         if (Router.matchCount !== 1) {
             let x = 0;
@@ -183,6 +193,8 @@ class RouterRouteChangeEvent {
     }
 
     /**
+     * Peforms the fetch request with timeout and displays progress bar 
+     * 
      * @param {String} url 
      * @param {RequestInit} params
      * @returns {Promise<Response?>} 
@@ -302,10 +314,9 @@ class Router {
         });
     }
 
-
-
-
     /**
+     * 
+     * Updates the  value of the url for a specified variable or key  of the search params or query
      * 
      * @param {String} key 
      * @param {String} value 
@@ -330,6 +341,8 @@ class Router {
     }
 
     /**
+     * Rereshes the page 
+     * Setting hard param to true result in hard reload 
      * 
      * @param {boolean} hard 
      */
@@ -349,6 +362,9 @@ class Router {
     }
 
     /**
+     * 
+     * Used to perform redirect 
+     * 
      * @param {String} path 
      * @param {boolean}  replace
      */
@@ -371,6 +387,9 @@ class Router {
 
 
     /**
+     * 
+     * Emits the event
+     * 
      * @param {"routechange"|"querychange"} eventType
      */
     emit(eventType, forwardObject = {}) {
@@ -382,10 +401,11 @@ class Router {
     }
 
     /**
-     * 
+     * Hides all the routed elements except the element passed as an argument 
+     * OR Passing nothing to the except arg results hiding all the routed elements
      * @param {HTMLElement} except 
      */
-    hideRouteElements(except) {
+    hideRouteElements(except = null) {
         this.#routes.forEach(d => d.hidden = true);
         except?.hidden = false;
     }
@@ -398,6 +418,8 @@ class Router {
      */
 
     /**
+     * Register an event listener for specific event type
+     * 
      * @param {"routechange"} eventType
      * @param {cb} callback
      * 
