@@ -14,7 +14,6 @@ router.on("routechange", async (e) => {
             console.log("Something went wrong");
         }
     } else {
-        console.log("404")
         e.render();
     }
 });
