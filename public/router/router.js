@@ -96,8 +96,6 @@ class RouterRouteChangeEvent {
      */
     matches(str) {
 
-        Router.matchCount += 1;
-
         const path = window.location.pathname;
         if (str === path) {
             const routes = document.querySelectorAll("[data-route]");
@@ -180,7 +178,7 @@ class RouterRouteChangeEvent {
      * Does a dummy progress loading
     */
     doProgress() {
-        if (Router.matchCount !== 1) {
+        if (!Router.isInital) {
             let x = 0;
             const interval = setInterval(() => {
                 if (x >= 100) {
@@ -191,7 +189,7 @@ class RouterRouteChangeEvent {
                 progressBar.setProgress(x);
             }, 30);
         }
-        Router.matchCount += 1;
+        Router.isInital = false;
     }
 
     /**
@@ -207,13 +205,17 @@ class RouterRouteChangeEvent {
             let result = null, fetchError = null;
 
             const progressFunction = (progress) => {
-                if (Router.matchCount !== 1) {
+                if (!Router.isInital) {
                     progressBar.setProgress(progress);
                 }
             }
 
             const successFunction = () => {
                 progressFunction(100);
+                if (Router.isInital) {
+                    Router.isInital = false;
+                }
+
                 clearInterval(loadInterval);
                 return resolver(result);
             }
@@ -285,8 +287,7 @@ class RouterEventManager {
 
 class Router {
 
-    /** @type {number} */ static matchCount = 0;
-    /** @type {number} */
+    /** @type {boolean} */ static isInital = true;
     /** @type {Array<HTMLElement>?}  */ #routes = null;
     /** @type {RouterEventManager}  */ #eventManager =
         new RouterEventManager();
