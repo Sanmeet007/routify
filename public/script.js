@@ -11,11 +11,11 @@ router.on("routechange", async (e) => {
             });
             e.render();
         } catch (err) {
-
+            console.log("Something went wrong");
         }
-        router.hideRouteElements(e.linkedElement);
     } else {
         console.log("404")
+        e.render();
     }
 });
 

@@ -158,6 +158,8 @@ class RouterRouteChangeEvent {
 
                 return returnType;
             } else {
+                const noMatchRoute = document.querySelector("[data-route='*']");
+                this.#element = noMatchRoute;
                 return false;
             }
         }
@@ -407,7 +409,9 @@ class Router {
      */
     hideRouteElements(except = null) {
         this.#routes.forEach(d => d.hidden = true);
-        except?.hidden = false;
+        if (except instanceof HTMLElement) {
+            except.hidden = false;
+        }
     }
 
     /**
