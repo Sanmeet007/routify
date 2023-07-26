@@ -318,6 +318,14 @@ class Router {
     }
 
     /**
+     * Tells if the page was requested initially 
+     * @returns {boolean} */
+    isInitialLoad() {
+        return Router.isInital;
+    }
+
+
+    /**
      * 
      * Updates the  value of the url for a specified variable or key  of the search params or query
      * 
