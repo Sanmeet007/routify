@@ -324,6 +324,12 @@ class Router {
         return Router.isInital;
     }
 
+    /**
+     * @param {String} title
+     */
+    setPageTitle(title) {
+        document.title = title;
+    }
 
     /**
      * 

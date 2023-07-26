@@ -2,28 +2,148 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>First JSP</title>
+    <title>Routify</title>
     <meta name="color-scheme" content="dark" />
+    <link rel="shortcut icon" href="favicon.png" type="image/png" />
+
+    <!-- Compiled and minified CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <!-- Custom dark theme -->
+    <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
-    <style></style>
-    <div class="progress"></div>
-
+    <!-- Home page -->
     <div data-route="/" hidden>
-      <h1>Homepage</h1>
-      <a href="/app" data-link>go to application</a>
-      <a href="/someother-url" data-link>check 404 page</a>
-    </div>
-    <div data-route="/app" hidden>
-      <h1>Application</h1>
-      <p>This is application page</p>
+      <div class="hero-section">
+        <div class="background">
+          <video
+            class="hero-media-asset is-visible"
+            autoplay=""
+            muted=""
+            loop=""
+            data-src-lg="https://cdn.dribbble.com/uploads/39421/original/963b4f8739cbdf86ca3f3a23245efd18.mp4?1657824985"
+            data-src-sm="https://cdn.dribbble.com/uploads/39422/original/2a124f438241970f60b377e881b8dc0b.mp4?1657824997"
+          >
+            <source
+              src="https://cdn.dribbble.com/uploads/39422/original/2a124f438241970f60b377e881b8dc0b.mp4?1657824997"
+              type="video/mp4"
+            />
+          </video>
+        </div>
+        <div class="content">
+          <div class="hero-content">
+            <h1>Routify - Simplified Routing for Web Applications</h1>
+            <p class="flow-text">
+              Routify is a powerful and user-friendly routing module designed to
+              streamline navigation within your web applications. Inspired by
+              the popular "react-router," Routify provides an intuitive and
+              efficient way to manage different routes, enabling seamless
+              transitions between pages while maintaining a clean and organized
+              codebase.
+            </p>
+          </div>
+          <div class="hero-button">
+            <a
+              class="btn waves-effect waves-light"
+              href="/about-module"
+              data-link
+            >
+              About Routify
+            </a>
+            <a
+              class="btn outline waves-effect waves-light"
+              href="/error"
+              data-link
+            >
+              Check 404
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
 
+    <!-- App page -->
+    <div data-route="/about-module" hidden>
+      <div class="container">
+        <h1>About Routify</h1>
+        <p>
+          Routify is a powerful and user-friendly routing module designed to
+          streamline navigation within your web applications. Inspired by the
+          popular "react-router," Routify provides an intuitive and efficient
+          way to manage different routes, enabling seamless transitions between
+          pages while maintaining a clean and organized codebase.
+        </p>
+        <h2>Key Features:</h2>
+        <ul>
+          <li>
+            <strong>Easy Integration:</strong> With Routify, integrating routing
+            capabilities into your web application is a breeze. It seamlessly
+            works with popular JavaScript frameworks, making it a versatile
+            choice for a wide range of projects.
+          </li>
+          <li>
+            <strong>Declarative Routing:</strong> Say goodbye to complex
+            configurations. Routify follows a declarative approach, allowing you
+            to define routes and their associated components with minimal
+            effort. This helps enhance code readability and maintainability.
+          </li>
+          <li>
+            <strong>Dynamic Routing:</strong> Whether it's dynamic URLs, nested
+            routes, or route parameters, Routify supports a variety of routing
+            scenarios, empowering you to create dynamic and interactive web
+            applications.
+          </li>
+          <li>
+            <strong>Middleware Support:</strong> Routify comes equipped with
+            middleware support, letting you execute functions before or after
+            route transitions. This feature is perfect for handling
+            authentication, data fetching, and other pre/post-route tasks.
+          </li>
+          <li>
+            <strong>Robust Navigation:</strong> Enjoy smooth and intuitive
+            navigation within your app. Routify handles route changes
+            efficiently, providing your users with a delightful browsing
+            experience.
+          </li>
+          <li>
+            <strong>Extensible and Customizable:</strong> Extend Routify's
+            capabilities with plugins and customize its behavior to fit your
+            specific needs. The module's flexible architecture allows developers
+            to tailor routing functionalities as desired.
+          </li>
+        </ul>
+        <p>
+          Experience the power of simplified routing with Routify and focus on
+          building exceptional web applications without the complexities of
+          handling navigation. Let Routify take care of the routing, so you can
+          concentrate on creating a seamless user experience.
+        </p>
+        <p class="warning">
+          Note : This is an experimental module. May cause some exceptions.
+        </p>
+
+        <p class="flow-text">Fetch request result</p>
+
+        <pre id="json-code"></pre>
+      </div>
+    </div>
+
+    <!-- 404 Page -->
     <div data-route="*" hidden>
-      <h1>Error 404</h1>
+      <div class="center error-page">
+        <h4>404 | ERROR</h4>
+        <p>Page you have requested cannot be found.</p>
+      </div>
     </div>
 
-    <script src="/script.js" type="module"></script>
+    <script src="/js/script.js" type="module"></script>
     <script></script>
   </body>
 </html>

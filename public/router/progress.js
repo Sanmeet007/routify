@@ -16,11 +16,12 @@ class ProgressElement {
             left: 0;
             height: 1px;
             width : 0%;
+            margin: 0;
             box-shadow: 0 0 10px 2px rgb(255 0 0 / 47%);
             background-color: red;
             visibility: hidden;
             opacity : 0;
-            transition : all 10ms ease-in;
+            transition : all 50ms ease-in;
         }
         
         .progress.open{
