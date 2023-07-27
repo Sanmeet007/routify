@@ -432,13 +432,8 @@ class Router {
         links.forEach(link => {
             link.addEventListener("click", (e) => {
                 e.preventDefault();
-                if (link.hasAttribute("data-current-url")) {
-                    link.href = window.location.pathname;
-                    this.redirect(window.location.pathname, true);
-                } else {
-                    const url = new URL(link.href);
-                    this.redirect(url.pathname);
-                }
+                const url = new URL(link.href);
+                this.redirect(url.pathname);
             })
         });
 
@@ -545,6 +540,10 @@ class Router {
     emit(eventType, forwardObject = {}) {
         switch (eventType) {
             case RouterEvent.routeChange:
+                const links = document.querySelectorAll("[data-current-url]");
+                links.forEach(link => {
+                    link.href = window.location.pathname;
+                });
                 this.#eventManager.callRouteChangeEvents(forwardObject);
                 break;
         }
