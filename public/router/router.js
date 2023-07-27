@@ -423,16 +423,15 @@ class Router {
 
 
         this.#routes = Array.from(document.querySelectorAll("[data-route]"));
-        this.#routes.forEach(element => {
-            const links = element.querySelectorAll("[data-link]");
-            links.forEach(link => {
-                link.addEventListener("click", (e) => {
-                    e.preventDefault();
-                    const url = new URL(link.href);
-                    this.redirect(url.pathname);
-                })
-            });
-        })
+
+        const links = document.querySelectorAll("[data-link]");
+        links.forEach(link => {
+            link.addEventListener("click", (e) => {
+                e.preventDefault();
+                const url = new URL(link.href);
+                this.redirect(url.pathname);
+            })
+        });
 
 
         window.addEventListener("load", (e) => {
@@ -454,7 +453,6 @@ class Router {
      * @param {String} title
      */
     setPageTitle(title) {
-        document.title = title;
     }
 
     /**
