@@ -1,3 +1,5 @@
+<% let appPageData = ""; try{ appPageData = data; }catch(_){ } %>
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -135,7 +137,7 @@
 
         <p class="flow-text">Fetch request result</p>
 
-        <pre id="json-code"></pre>
+        <pre id="json-code"><%- appPageData %></pre>
       </div>
     </div>
 
