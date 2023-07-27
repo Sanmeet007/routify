@@ -118,3 +118,7 @@ body {
 .error-page > * {
   margin: 0;
 }
+
+.box {
+  padding: 2rem;
+}
