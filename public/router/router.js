@@ -246,6 +246,7 @@ class RouterRouteChangeEvent {
     * Renders the linked element only and hides all other route elements
     */
     render() {
+        window.scrollTo(0);
         const errorPage = document.querySelector("data-error-route");
         if (errorPage) {
             errorPage.hidden = true;
@@ -277,6 +278,8 @@ class RouterRouteChangeEvent {
     * Note : you can disable rendering of the default routes by passing false when calling
     */
     renderNoMatch(defaults = true) {
+        this.#elements = [];
+
         const noMatchRoutes = document.querySelectorAll("[data-route='~']");
 
         if (defaults === true) {
@@ -286,7 +289,7 @@ class RouterRouteChangeEvent {
                 this.#elements.push(route);
             })
 
-            this.#elements = Array.from(noMatchRoutes);
+            this.#elements.concat(Array.from(noMatchRoutes));
         } else {
             this.#elements = Array.from(noMatchRoutes);
         }
