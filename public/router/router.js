@@ -246,7 +246,10 @@ class RouterRouteChangeEvent {
     * Renders the linked element only and hides all other route elements
     */
     render() {
-        window.scrollTo(0);
+        if (!router.isInitialLoad()) {
+            window.scrollTo(0, 0);
+        }
+
         const errorPage = document.querySelector("data-error-route");
         if (errorPage) {
             errorPage.hidden = true;
