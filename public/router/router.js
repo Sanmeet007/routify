@@ -286,17 +286,18 @@ class RouterRouteChangeEvent {
         const noMatchRoutes = document.querySelectorAll("[data-route='~']");
 
         if (defaults === true) {
-            const defualtMatchRoutes = Array.from(document.querySelectorAll("[data-route='*'"));
+            const defualtMatchRoutes = Array.from(document.querySelectorAll("[data-route='*']"));
 
             defualtMatchRoutes.forEach(route => {
                 this.#elements.push(route);
             })
 
-            this.#elements.concat(Array.from(noMatchRoutes));
+            this.#elements = this.#elements.concat(Array.from(noMatchRoutes));
         } else {
             this.#elements = Array.from(noMatchRoutes);
         }
 
+        console.log
         this.render();
     }
 
@@ -553,8 +554,6 @@ class Router {
      * @param {Array<HTMLElement>?} exceptElments 
      */
     hideRouteElements(exceptElments = null) {
-
-
         this.#routes.forEach(d => d.hidden = true);
         if (exceptElments instanceof Object) {
             exceptElments.forEach(el => {
