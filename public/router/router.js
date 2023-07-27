@@ -29,6 +29,8 @@ class RouterRouteChangeEvent {
     /** @type {QueryObject} */ query;
     /** @type {Array<HTMLElement?>} */ #elements = [];
 
+
+
     /**
      * @param {ObjectConstructor} obj
      */
@@ -43,6 +45,17 @@ class RouterRouteChangeEvent {
             search: window.location.search,
             params: Object.fromEntries(urlSearchParams.entries())
         }
+    }
+
+
+    /**
+   * Returns the element whose route matches with the current url.
+   * Note : Only works after match is called 
+   * 
+   * @returns {Array<HTMLElement?>}
+   */
+    get linkedElements() {
+        return this.#elements;
     }
 
 
@@ -82,12 +95,6 @@ class RouterRouteChangeEvent {
         }
     }
 
-    /**
-     * Renders the linked element only and hides all other 
-     */
-    render() {
-        router.hideRouteElements(this.#elements);
-    }
 
     /**
      * Matches the current url with route specified by the user
@@ -95,26 +102,65 @@ class RouterRouteChangeEvent {
      * @returns {boolean}
      */
     matches(str) {
+        this.#elements = [];
 
         const path = window.location.pathname;
-        if (str === path) {
-            const routes = document.querySelectorAll("[data-route]");
-            let noMatch = true;
-            routes.forEach(route => {
-                const registeredRoute = route.getAttribute("data-route");
-                if (this.#matchRoute(registeredRoute)) {
-                    this.#elements.push(route);
-                    noMatch = false;
-                }
-            })
 
-            if (noMatch) {
-                const noMatchRoutes = document.querySelectorAll("[data-route='~']");
-                this.#elements = Array.from(noMatchRoutes);
+
+        if (str === path) {
+
+            const routes = document.querySelectorAll("[data-route]");
+            const matchAllRoutes = document.querySelectorAll("[data-route='*']");
+
+
+            if (routes != null) {
+                routes.forEach(route => {
+                    if (route.getAttribute("data-route") !== "*") {
+
+
+                        const registeredRoutes = route.getAttribute("data-route");
+
+                        if (registeredRoutes.includes(";")) {
+
+                            registeredRoutes.split(";").filter(x => x != "").forEach(registeredRoute => {
+                                if (this.#matchRoute(registeredRoute)) {
+                                    this.#elements.push(route);
+                                }
+                            })
+                        } else {
+                            if (this.#matchRoute(registeredRoutes)) {
+                                this.#elements.push(route);
+                            }
+                        }
+                    }
+                });
+            }
+
+            if (matchAllRoutes != null) {
+                matchAllRoutes.forEach(route => {
+                    const exceptionRoutes = route.getAttribute("[data-excpetion-route]");
+                    if (exceptionRoutes != null) {
+                        if (exceptionRoutes.includes(";")) {
+                            exceptionRoutes.split(";").filter(x => x != "").forEach(exceptionRoute => {
+                                if (!this.#matchRoute(exceptionRoute)) {
+                                    this.#elements.push(route);
+                                }
+                            })
+                        } else {
+                            if (!this.#matchRoute(exceptionRoutes)) {
+                                this.#elements.push(route);
+                            }
+                        }
+                    } else {
+                        this.#elements.push(route);
+                    }
+                });
             }
 
             return true;
         } else {
+
+
             /** @type {Array<String>} */
             const keys = str.split("/").filter(x => x != "").map(x => x.replace("/", ""));
 
@@ -137,19 +183,51 @@ class RouterRouteChangeEvent {
 
                 if (returnType) {
                     const routes = document.querySelectorAll("[data-route]");
-                    let noMatch = true;
-                    routes.forEach(route => {
-                        const registeredRoute = route.getAttribute("data-route");
-                        if (this.#matchRoute(registeredRoute)) {
-                            this.#elements.push(route);
-                            noMatch = false;
-                        }
-                    })
+                    const matchAllRoutes = document.querySelectorAll("[data-route='*']");
 
-                    if (noMatch) {
-                        const noMatchRoutes = document.querySelectorAll("[data-route='~']");
+                    if (routes != null) {
+                        routes.forEach(route => {
+                            if (route.getAttribute("data-route") !== "*") {
 
-                        this.#elements = Array.from(noMatchRoutes);
+
+                                const registeredRoutes = route.getAttribute("data-route");
+
+                                if (registeredRoutes.includes(";")) {
+
+                                    registeredRoutes.split(";").filter(x => x != "").forEach(registeredRoute => {
+                                        if (this.#matchRoute(registeredRoute)) {
+                                            this.#elements.push(route);
+                                        }
+                                    })
+                                } else {
+
+                                    if (this.#matchRoute(registeredRoutes)) {
+                                        this.#elements.push(route);
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    if (matchAllRoutes != null) {
+                        matchAllRoutes.forEach(route => {
+                            const exceptionRoutes = route.getAttribute("[data-excpetion-route]");
+                            if (exceptionRoutes != null) {
+                                if (exceptionRoutes.includes(";")) {
+                                    exceptionRoutes.split(";").filter(x => x != "").forEach(exceptionRoute => {
+                                        if (!this.#matchRoute(exceptionRoute)) {
+                                            this.#elements.push(route);
+                                        }
+                                    })
+                                } else {
+                                    if (!this.#matchRoute(exceptionRoutes)) {
+                                        this.#elements.push(route);
+                                    }
+                                }
+                            } else {
+                                this.#elements.push(route);
+                            }
+                        });
                     }
 
                     this.params = obj;
@@ -157,23 +235,64 @@ class RouterRouteChangeEvent {
 
                 return returnType;
             } else {
-                const noMatchRoutes = document.querySelectorAll("[data-route='~']");
-                this.#elements = Array.from(noMatchRoutes)
                 return false;
             }
         }
+    }
 
+
+
+    /**
+    * Renders the linked element only and hides all other route elements
+    */
+    render() {
+        const errorPage = document.querySelector("data-error-route");
+        if (errorPage) {
+            errorPage.hidden = true;
+        }
+        router.hideRouteElements(this.#elements);
     }
 
     /**
-     * Returns the element whose route matches with the current url.
-     * Note : Only works after match is called 
-     * 
-     * @returns {Array<HTMLElement?>}
-     */
-    get linkedElements() {
-        return this.#elements;
+    * Render error route
+    * 
+    * Note : you can disable rendering of the default routes by passing false when calling
+    */
+    renderError(defaults = true) {
+        if (defaults) {
+            this.#elements = Array.from(document.querySelectorAll("[data-route='*']")).concat(Array.from(document.querySelectorAll("[data-error-route]")));
+            this.render()
+
+        } else {
+            this.#elements = Array.from(document.querySelectorAll("[data-error-route]"));
+            this.render()
+        }
     }
+
+
+    /**
+    * Renders no match routes elements  
+    * 
+    * Note : you can disable rendering of the default routes by passing false when calling
+    */
+    renderNoMatch(defaults = true) {
+        const noMatchRoutes = document.querySelectorAll("[data-route='~']");
+
+        if (defaults === true) {
+            const defualtMatchRoutes = Array.from(document.querySelectorAll("[data-route='*'"));
+
+            defualtMatchRoutes.forEach(route => {
+                this.#elements.push(route);
+            })
+
+            this.#elements = Array.from(noMatchRoutes);
+        } else {
+            this.#elements = Array.from(noMatchRoutes);
+        }
+
+        this.render();
+    }
+
 
     /** 
      * Does a dummy progress loading
@@ -424,6 +543,8 @@ class Router {
      * @param {Array<HTMLElement>?} exceptElments 
      */
     hideRouteElements(exceptElments = null) {
+
+
         this.#routes.forEach(d => d.hidden = true);
         if (exceptElments instanceof Object) {
             exceptElments.forEach(el => {

@@ -16,11 +16,12 @@ router.on("routechange", async (e) => {
             router.setPageTitle("About Routify");
             e.render();
         } catch (err) {
-            console.log("Something went wrong");
+            router.setPageTitle("400 | Error");
+            e.renderError();
         }
     } else {
         router.setPageTitle("404 Not found");
-        e.render();
+        e.renderNoMatch();
     }
 });
 
