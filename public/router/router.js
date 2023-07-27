@@ -24,7 +24,7 @@ class RouterRouteChangeEvent {
 
     /** @type {String} */ eventType = "routechange";
     /** @type {String} */ url;
-    /** @type {String} */ path;
+    /** @type {String} */ pathname;
     /** @type {ParamObject} */ params = {};
     /** @type {QueryObject} */ query;
     /** @type {Array<HTMLElement?>} */ #elements = [];
@@ -35,7 +35,7 @@ class RouterRouteChangeEvent {
      * @param {ObjectConstructor} obj
      */
     constructor(obj = {}) {
-        this.path = window.location.pathname;
+        this.pathname = window.location.pathname;
         this.url = window.location.href;
 
 
@@ -259,6 +259,12 @@ class RouterRouteChangeEvent {
     * Note : you can disable rendering of the default routes by passing false when calling
     */
     renderError(defaults = true) {
+        Array.from(document.querySelectorAll("[data-current-url]")).forEach(el => {
+            if (el) {
+                el.href = window.location.pathname;
+            }
+        });
+
         if (defaults) {
             this.#elements = Array.from(document.querySelectorAll("[data-route='*']")).concat(Array.from(document.querySelectorAll("[data-error-route]")));
             this.render()

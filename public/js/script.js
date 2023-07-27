@@ -17,6 +17,7 @@ router.on("routechange", async (e) => {
             e.render();
         } catch (err) {
             router.setPageTitle("400 | Error");
+            console.log(e.pathname)
             e.renderError();
         }
     } else {
