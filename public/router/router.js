@@ -27,7 +27,7 @@ class RouterRouteChangeEvent {
     /** @type {String} */ path;
     /** @type {ParamObject} */ params = {};
     /** @type {QueryObject} */ query;
-    /** @type {HTMLElement?} */ #element = null;
+    /** @type {Array<HTMLElement?>} */ #elements = [];
 
     /**
      * @param {ObjectConstructor} obj
@@ -86,7 +86,7 @@ class RouterRouteChangeEvent {
      * Renders the linked element only and hides all other 
      */
     render() {
-        router.hideRouteElements(this.#element);
+        router.hideRouteElements(this.#elements);
     }
 
     /**
@@ -103,14 +103,14 @@ class RouterRouteChangeEvent {
             routes.forEach(route => {
                 const registeredRoute = route.getAttribute("data-route");
                 if (this.#matchRoute(registeredRoute)) {
-                    this.#element = route;
+                    this.#elements.push(route);
                     noMatch = false;
                 }
             })
 
             if (noMatch) {
-                const noMatchRoute = document.querySelector("[data-route='*']");
-                this.#element = noMatchRoute;
+                const noMatchRoutes = document.querySelectorAll("[data-route='~']");
+                this.#elements = Array.from(noMatchRoutes);
             }
 
             return true;
@@ -141,14 +141,15 @@ class RouterRouteChangeEvent {
                     routes.forEach(route => {
                         const registeredRoute = route.getAttribute("data-route");
                         if (this.#matchRoute(registeredRoute)) {
-                            this.#element = route;
+                            this.#elements.push(route);
                             noMatch = false;
                         }
                     })
 
                     if (noMatch) {
-                        const noMatchRoute = document.querySelector("[data-route='*']");
-                        this.#element = noMatchRoute;
+                        const noMatchRoutes = document.querySelectorAll("[data-route='~']");
+
+                        this.#elements = Array.from(noMatchRoutes);
                     }
 
                     this.params = obj;
@@ -156,8 +157,8 @@ class RouterRouteChangeEvent {
 
                 return returnType;
             } else {
-                const noMatchRoute = document.querySelector("[data-route='*']");
-                this.#element = noMatchRoute;
+                const noMatchRoutes = document.querySelectorAll("[data-route='~']");
+                this.#elements = Array.from(noMatchRoutes)
                 return false;
             }
         }
@@ -168,10 +169,10 @@ class RouterRouteChangeEvent {
      * Returns the element whose route matches with the current url.
      * Note : Only works after match is called 
      * 
-     * @returns {HTMLElement?}
+     * @returns {Array<HTMLElement?>}
      */
-    get linkedElement() {
-        return this.#element;
+    get linkedElements() {
+        return this.#elements;
     }
 
     /** 
@@ -420,12 +421,16 @@ class Router {
     /**
      * Hides all the routed elements except the element passed as an argument 
      * OR Passing nothing to the except arg results hiding all the routed elements
-     * @param {HTMLElement} except 
+     * @param {Array<HTMLElement>?} exceptElments 
      */
-    hideRouteElements(except = null) {
+    hideRouteElements(exceptElments = null) {
         this.#routes.forEach(d => d.hidden = true);
-        if (except instanceof HTMLElement) {
-            except.hidden = false;
+        if (exceptElments instanceof Object) {
+            exceptElments.forEach(el => {
+                if (el instanceof HTMLElement) {
+                    el.hidden = false;
+                }
+            })
         }
     }
 
