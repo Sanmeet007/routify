@@ -259,11 +259,6 @@ class RouterRouteChangeEvent {
     * Note : you can disable rendering of the default routes by passing false when calling
     */
     renderError(defaults = true) {
-        Array.from(document.querySelectorAll("[data-current-url]")).forEach(el => {
-            if (el) {
-                el.href = window.location.pathname;
-            }
-        });
 
         if (defaults) {
             this.#elements = Array.from(document.querySelectorAll("[data-route='*']")).concat(Array.from(document.querySelectorAll("[data-error-route]")));
@@ -428,8 +423,13 @@ class Router {
         links.forEach(link => {
             link.addEventListener("click", (e) => {
                 e.preventDefault();
-                const url = new URL(link.href);
-                this.redirect(url.pathname);
+                if (link.hasAttribute("data-current-url")) {
+                    link.href = window.location.pathname;
+                    this.redirect(window.location.pathname, true);
+                } else {
+                    const url = new URL(link.href);
+                    this.redirect(url.pathname);
+                }
             })
         });
 
