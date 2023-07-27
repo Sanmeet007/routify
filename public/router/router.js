@@ -246,7 +246,7 @@ class RouterRouteChangeEvent {
     * Renders the linked element only and hides all other route elements
     */
     render() {
-        if (!router.isInitialLoad()) {
+        if (!router.isInitialMatch()) {
             window.scrollTo(0, 0);
         }
 
@@ -454,7 +454,7 @@ class Router {
     /**
      * Tells if the page was requested initially 
      * @returns {boolean} */
-    isInitialLoad() {
+    isInitialMatch() {
         return Router.isInital;
     }
 
