@@ -21,6 +21,7 @@ router.on("routechange", async (e) => {
                 e.renderError();
             }
         } else {
+            router.setPageTitle("About Routify");
             e.render();
         }
     } else {

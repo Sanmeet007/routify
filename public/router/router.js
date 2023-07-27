@@ -457,6 +457,7 @@ class Router {
      * @param {String} title
      */
     setPageTitle(title) {
+        document.title = title;
     }
 
     /**

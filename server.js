@@ -15,8 +15,9 @@ app.get("/", (req, res) => {
 app.get("/about-module", async (req, res) => {
     const result = await fetch("https://jsonplaceholder.typicode.com/todos/");
     const data = await result.json();
+    data.length = 5;
     return res.render("index.ejs", {
-        data: JSON.stringify(data)
+        data: JSON.stringify(data, null, 4)
     });
 });
 
