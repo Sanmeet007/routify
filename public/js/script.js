@@ -22,7 +22,9 @@ router.on("routechange", async (e) => {
         }
     } else {
         router.setPageTitle("404 Not found");
-        e.renderNoMatch();
+
+        // no defaults should render
+        e.renderNoMatch(false);
     }
 });
 

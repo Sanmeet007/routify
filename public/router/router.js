@@ -138,7 +138,7 @@ class RouterRouteChangeEvent {
 
             if (matchAllRoutes != null) {
                 matchAllRoutes.forEach(route => {
-                    const exceptionRoutes = route.getAttribute("[data-excpetion-route]");
+                    const exceptionRoutes = route.getAttribute("data-except-route");
                     if (exceptionRoutes != null) {
                         if (exceptionRoutes.includes(";")) {
                             exceptionRoutes.split(";").filter(x => x != "").forEach(exceptionRoute => {
@@ -211,7 +211,7 @@ class RouterRouteChangeEvent {
 
                     if (matchAllRoutes != null) {
                         matchAllRoutes.forEach(route => {
-                            const exceptionRoutes = route.getAttribute("[data-excpetion-route]");
+                            const exceptionRoutes = route.getAttribute("data-excpet-route");
                             if (exceptionRoutes != null) {
                                 if (exceptionRoutes.includes(";")) {
                                     exceptionRoutes.split(";").filter(x => x != "").forEach(exceptionRoute => {
@@ -277,6 +277,8 @@ class RouterRouteChangeEvent {
 
     /**
     * Renders no match routes elements  
+    * 
+    * @param {boolean} defaults 
     * 
     * Note : you can disable rendering of the default routes by passing false when calling
     */
