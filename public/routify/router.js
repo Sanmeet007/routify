@@ -1,3 +1,4 @@
+import { fetchCacheManager } from "./fetch-cache-manager.js";
 import { progressBar } from "./progress.js";
 
 
@@ -327,12 +328,14 @@ class RouterRouteChangeEvent {
      * 
      * @param {String} url 
      * @param {RequestInit} params
-     * @returns {Promise<Response?>} 
+     * @returns {Promise<Object?>} 
      */
-    async fetch(url, params = {}, timeout = 10_000) {
-        return new Promise((resolver, rejector) => {
-            let error = false, progress = 0, request_finish = false;
-            let result = null, fetchError = null;
+    fetch(url, options = {}, timeout = 10_000) {
+        if (options === null) options = {};
+
+        return new Promise(async (resolver, rejector) => {
+            let progress = 0, wasIntruppted = false;
+
 
             const progressFunction = (progress) => {
                 if (!Router.isInital) {
@@ -340,53 +343,80 @@ class RouterRouteChangeEvent {
                 }
             }
 
-            const successFunction = () => {
+            const loadInterval = setInterval(() => {
+                if (window.navigator.onLine) {
+                    if (progress < 95) {
+                        progressFunction(progress += 2);
+                    }
+                } else {
+                    errorFunction(new Error("Network Error"));
+                }
+            }, 50);
+
+            const successFunction = (data) => {
                 progressFunction(100);
                 if (Router.isInital) {
                     Router.isInital = false;
                 }
-
                 clearInterval(loadInterval);
-                return resolver(result);
+                return resolver(data);
             }
 
-            const errorFunction = () => {
+            const errorFunction = (error) => {
                 progressFunction(100);
                 clearInterval(loadInterval);
-                return rejector(fetchError);
+                return rejector(error);
 
             }
 
-            Promise.race([
-                fetch(url, params),
-                new Promise((_, reject) =>
-                    setTimeout(() => reject(new Error('Request timeout')), timeout)
-                )
-            ]).then(res => {
-                result = res;
-                request_finish = true;
-                error = false;
-                successFunction();
-            }).catch(e => {
-                error = true;
-                request_finish = true;
-                fetchError = e;
-                errorFunction();
-            });
+            const abortController = new AbortController();
+            try {
+                setTimeout(() => {
+                    wasIntruppted = true;
+                    abortController.abort();
+                }, timeout);
 
-
-            const loadInterval = setInterval(() => {
-                if (window.navigator.onLine) {
-                    if (progress < 95) {
-                        progress += 2;
-                        progressFunction(progress);
-                    }
+                const res = await fetch(url, {
+                    ...options,
+                    signal: abortController.signal
+                });
+                const data = await res.json();
+                return successFunction(data);
+            } catch (error) {
+                if (wasIntruppted) {
+                    return errorFunction(new Error("Request timeout"));
                 } else {
-                    error = true;
-                    errorFunction();
+                    return errorFunction(error);
                 }
-            }, 50);
+            }
+        });
+    }
 
+
+
+    /**
+ * 
+ * @param {RequestInfo | URL} url 
+ * @param {RequestInit} options
+ * @param {number?} timeout
+ * 
+ * @returns {Promise<Object>}
+ */
+    fetchOnce(url, options = {}, timeout = 10_000) {
+        return new Promise(async (resolver, rejector) => {
+            try {
+                const staleData = fetchCacheManager.getData(url);
+                if (staleData != null) {
+                    this.doProgress();
+                    return resolver(staleData);
+                } else {
+                    const data = await this.fetch(url, options, timeout);
+                    fetchCacheManager.putData(url, data);
+                    return resolver(data);
+                }
+            } catch (e) {
+                return rejector(e);
+            }
         });
     }
 }
@@ -416,7 +446,6 @@ class RouterEventManager {
 
 
 class Router {
-
     /** @type {boolean} */ static isInital = true;
     /** @type {Array<HTMLElement>?}  */ #routes = null;
     /** @type {RouterEventManager}  */ #eventManager =
@@ -424,8 +453,6 @@ class Router {
     /**@type {ProgressElement} */  progessElement = progressBar;
 
     constructor() {
-
-
         this.#routes = Array.from(document.querySelectorAll("[data-route]"));
 
         const links = document.querySelectorAll("[data-link]");
@@ -587,6 +614,9 @@ class Router {
             }
         }
     }
+
+
+
 
 }
 

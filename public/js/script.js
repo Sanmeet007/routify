@@ -10,15 +10,14 @@ router.on("routechange", async (e) => {
     } else if (e.matches("/about-module")) {
         if (!router.isInitialMatch()) {
             try {
-                const result = await e.fetch("https://jsonplaceholder.typicode.com/todos/");
-                const data = await result.json();
+                const data = await e.fetchOnce("https://jsonplaceholder.typicode.com/todos/");
                 data.length = 5;
                 jsonCodeDiv.textContent = JSON.stringify(data, null, 4);
                 router.setPageTitle("About Routify");
                 e.render();
             } catch (err) {
                 router.setPageTitle("400 | Error");
-                e.renderError();
+                e.renderError(false);
             }
         } else {
             router.setPageTitle("About Routify");
