@@ -20,7 +20,6 @@ router.on("routechange", async (e) => {
                 e.renderError(false);
             }
         } else {
-            console.log("Why i was called");
             router.setPageTitle("About Routify");
             e.render();
         }
