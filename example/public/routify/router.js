@@ -485,7 +485,11 @@ class Router {
             link.addEventListener("click", (e) => {
                 e.preventDefault();
                 const url = new URL(link.href);
-                this.redirect(url.pathname);
+                if (link.hasAttribute("data-current-url")) {
+                    this.redirect(url.pathname, true);
+                } else {
+                    this.redirect(url.pathname);
+                }
             })
         });
 
