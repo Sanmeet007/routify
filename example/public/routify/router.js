@@ -454,6 +454,10 @@ class RouterEventManager {
         this.#routeChange.forEach((e) => {
             e(new RouterRouteChangeEvent("routechange"));
         });
+
+        if (Router.isInital)
+            Router.isInital = false;
+
         return;
     }
 }
@@ -481,10 +485,8 @@ class Router {
         window.addEventListener("load", (e) => {
             Router.isInital = true;
             this.emit("routechange");
-            window.addEventListener("popstate", () => {
-                if (Router.isInital)
-                    Router.isInital = false;
 
+            window.addEventListener("popstate", () => {
                 this.emit("routechange");
             })
         });

@@ -1,4 +1,4 @@
-import { router } from "../../../routify/router.js";
+import { router } from "../routify/router.js";
 
 const jsonCodeDiv = document.querySelector("#json-code");
 
@@ -20,6 +20,7 @@ router.on("routechange", async (e) => {
                 e.renderError(false);
             }
         } else {
+            console.log("Why i was called");
             router.setPageTitle("About Routify");
             e.render();
         }
