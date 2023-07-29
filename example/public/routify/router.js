@@ -336,7 +336,7 @@ class RouterRouteChangeEvent {
     /**
      * Peforms the fetch request with timeout and displays progress bar.
      * 
-     * NOTE : returns json object by calling `.json()` on the request 
+     * NOTE : returns json object by calling `.json()` on the response 
      * 
      * @param {String} url 
      * @param {RequestInit} params
@@ -406,6 +406,8 @@ class RouterRouteChangeEvent {
     /**
      * Peforms the fetch request once only with timeout and displays progress bar. 
      * In addition to it stores the result for the specfic url.
+     * 
+     * NOTE : returns json object by calling `.json()` on the response 
      * 
      * @param {RequestInfo | URL} url 
      * @param {RequestInit} options
