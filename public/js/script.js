@@ -8,7 +8,7 @@ router.on("routechange", async (e) => {
         router.setPageTitle("Routify");
         e.render();
     } else if (e.matches("/about-module")) {
-        if (!router.isInitialMatch()) {
+        if (!router.isInitialLoad()) {
             try {
                 const data = await e.fetchOnce("https://jsonplaceholder.typicode.com/todos/");
                 data.length = 5;

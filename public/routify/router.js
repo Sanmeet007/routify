@@ -247,7 +247,7 @@ class RouterRouteChangeEvent {
     * Renders the linked element only and hides all other route elements
     */
     render() {
-        if (!router.isInitialMatch()) {
+        if (!router.isInitialLoad()) {
             window.scrollTo(0, 0);
         }
 
@@ -320,7 +320,6 @@ class RouterRouteChangeEvent {
                 progressBar.setProgress(x);
             }, 30);
         }
-        Router.isInital = false;
     }
 
     /**
@@ -355,9 +354,6 @@ class RouterRouteChangeEvent {
 
             const successFunction = (data) => {
                 progressFunction(100);
-                if (Router.isInital) {
-                    Router.isInital = false;
-                }
                 clearInterval(loadInterval);
                 return resolver(data);
             }
@@ -466,8 +462,12 @@ class Router {
 
 
         window.addEventListener("load", (e) => {
+            Router.isInital = true;
             this.emit("routechange");
             window.addEventListener("popstate", () => {
+                if (Router.isInital)
+                    Router.isInital = false;
+
                 this.emit("routechange");
             })
         });
@@ -476,7 +476,7 @@ class Router {
     /**
      * Tells if the page was requested initially 
      * @returns {boolean} */
-    isInitialMatch() {
+    isInitialLoad() {
         return Router.isInital;
     }
 
