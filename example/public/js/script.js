@@ -1,4 +1,4 @@
-import { router } from "../../../routify/router";
+import { router } from "../../../routify/router.js";
 
 const jsonCodeDiv = document.querySelector("#json-code");
 
