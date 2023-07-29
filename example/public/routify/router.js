@@ -262,7 +262,7 @@ class RouterRouteChangeEvent {
             window.scrollTo(0, 0);
         }
 
-        const errorPage = document.querySelector("data-error-route");
+        const errorPage = document.querySelector("[data-error-route]");
         if (errorPage) {
             errorPage.hidden = true;
         }
