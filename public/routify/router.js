@@ -1,7 +1,11 @@
 /**
+ * Author:       Sanmeet Singh
+ * Created:      25.07.2023
+ * Desciption:   User-friendly and efficient routing module for web applications
+ * License :     MIT 
  * 
- */
-
+ * (c) Copyright by Routify 2023.
+ **/
 
 import { progressBar } from "./progress.js";
 import { RouterEvent, RouterEventManager, RouterRouteChangeEvent } from "./router-events.js";
