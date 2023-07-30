@@ -20,4 +20,4 @@ Email : <ssanmeet123@gmail.com>
 
 Feel free to ask any queries
 
-[Read Full documentation](https://github.com/Sanmeet007/routify/wiki/Documentation#requirements)
+[Read Full documentation](https://github.com/Sanmeet007/routify/wiki/Documentation)
