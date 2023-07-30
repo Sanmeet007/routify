@@ -98,6 +98,18 @@ Advanced methods:
   router.redirect("/about");
   ```
 
+- Custom Progress Change - `progressElement.progress()`:
+  You can implement a custom progress change by calling the `progressElement.progress()` method and passing the progress percentage as a parameter. The progress percentage should be between 0 and 100.
+
+  Example:
+
+  ```js
+  // Update progress to 50%
+  progressElement.progress(50);
+  ```
+
+---
+
 ## Rendering Elements based on the route
 
 With Routify, you can easily render elements based on the current route using specific attributes.
