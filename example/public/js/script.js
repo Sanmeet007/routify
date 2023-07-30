@@ -23,6 +23,16 @@ router.on("routechange", async (e) => {
             router.setPageTitle("About Routify");
             e.render();
         }
+    } else if (e.matches("/test-progress")) {
+        if (router.isInitialLoad()) {
+            e.render();
+            return;
+        }
+        router.progressElement.startProgress();
+        setTimeout(() => {
+            router.progressElement.endProgress();
+            e.render();
+        }, 4000);
     } else {
         router.setPageTitle("404 Not found");
 

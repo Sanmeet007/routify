@@ -48,6 +48,7 @@ class ProgressElement {
             this.#element.style.width = progess + "%";
             setTimeout(() => {
                 this.#element.classList.remove("open");
+                this.#element.style.width = "0%";
             }, 200)
         } else {
             this.#element.style.width = progess + "%";
@@ -73,5 +74,5 @@ class ProgressElement {
 }
 
 
-export const progressBar = new ProgressElement();
+export { ProgressElement };
 

@@ -7,9 +7,10 @@
  * (c) Copyright by Routify 2023.
  **/
 
-import { progressBar } from "./progress.js";
+import { ProgressElement } from "./progress.js";
 import { fetchCacheManager } from "./fetch-cache-manager.js";
 
+const progressBar = new ProgressElement();
 
 /**
  * @typedef  {ObjectConstructor} ParamObject
@@ -469,7 +470,7 @@ class Router {
     /** @type {Array<HTMLElement>?}  */ #routes = null;
     /** @type {RouterEventManager}  */ #eventManager =
         new RouterEventManager();
-    /**@type {ProgressElement} */  progessElement = progressBar;
+    /**@type {ProgressElement} */  progressElement = progressBar;
 
 
     /** 

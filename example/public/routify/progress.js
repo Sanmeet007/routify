@@ -2,6 +2,7 @@
 class ProgressElement {
     /** @type {HTMLElement} */ #element = null;
     /** @type {HTMLElement} */ #elementCss = null;
+    /** @type {Object} */  #progressInterval = null;
 
     constructor() {
 
@@ -47,13 +48,31 @@ class ProgressElement {
             this.#element.style.width = progess + "%";
             setTimeout(() => {
                 this.#element.classList.remove("open");
+                this.#element.style.width = "0%";
             }, 200)
         } else {
             this.#element.style.width = progess + "%";
         }
     }
+
+    startProgress() {
+        let progress = 0;
+        this.#progressInterval = setInterval(() => {
+            if (progress < 95) {
+                this.setProgress(progress += 2);
+            }
+        }, 50);
+    }
+
+
+    endProgress() {
+        if (this.#progressInterval != null) {
+            clearInterval(this.#progressInterval);
+            this.setProgress(100);
+        }
+    }
 }
 
 
-export const progressBar = new ProgressElement();
+export { ProgressElement };
 

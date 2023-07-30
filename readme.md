@@ -99,16 +99,30 @@ Advanced methods:
   ```
 
 - Custom Progress Change - `progressElement.setProgress()`:
-  You can implement a custom progress change by calling the `progressElement.setProgress()` method and passing the progress percentage as a parameter. The progress percentage should be between 0 and 100.
+  You can implement a custom progress change by calling the `progressElement.progress()` method and passing the progress percentage as a parameter. The progress percentage should be between 0 and 100.
 
   Example:
 
   ```js
   // Update progress to 50%
-  progressElement.setProgress(50);
+  router.progressElement.setProgress(50);
   ```
 
----
+- Custom Load with `startProgress` and `endProgress`:
+  To perform heavy tasks or custom loading operations that require time, you can use `startProgress()` to begin the progress and `endProgress()` to complete the progress load.
+
+  Example:
+
+  ```js
+  // Starting the progress
+  router.progressElement.startProgress();
+
+  // Performing some heavy task
+  heavyTask();
+
+  // Ending progress load
+  router.progressElement.endProgress();
+  ```
 
 ## Rendering Elements based on the route
 
